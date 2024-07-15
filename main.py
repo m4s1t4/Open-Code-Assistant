@@ -9,7 +9,7 @@ from openai import OpenAI
 from tools.tools import tools
 from tavily import TavilyClient
 from prompts.prompts import base_system_prompt, automode_system_prompt
-from PIL import ImageGrab, Image
+from PIL import Image
 from rich.console import Console
 from rich.syntax import Syntax
 from rich.panel import Panel
@@ -17,10 +17,6 @@ from rich.markdown import Markdown
 
 # -------- Importing api keys -------- #
 dotenv.load_dotenv()
-# Add these constants at the top of the file
-CONTINUATION_EXIT_PHRASE = "AUTOMODE_COMPLETE"
-MAX_CONTINUATION_ITERATIONS = 25
-
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
 
 # -------- Some configruations -------- #
@@ -30,13 +26,6 @@ tavily = TavilyClient(api_key=TAVILY_API_KEY)
 
 # Set up conversation memory.
 conversation_history = []
-
-# Automode flag:
-automode = False
-
-# Models to use
-MAINMODEL = "gpt-4o"
-TOOLCHECKERMODEL = "gpt-4o"
 
 # -------- Prompts part -------- #
 
@@ -51,19 +40,7 @@ def update_system_prompt(current_iteration=None, max_iterations=None):
 
     Do not reflect on the quality of the returned search results in your response.
     """
-    if automode:
-        iteration_info = ""
-        if current_iteration is not None and max_iterations is not None:
-            iteration_info = f"You are currently on iteration {current_iteration} out of {max_iterations} in automode."
-        return (
-            base_system_prompt
-            + "\n\n"
-            + automode_system_prompt.format(iteration_info=iteration_info)
-            + "\n\n"
-            + chain_of_thought_prompt
-        )
-    else:
-        return base_system_prompt + "\n\n" + chain_of_thought_prompt
+    return base_system_prompt + "\n\n" + chain_of_thought_prompt
 
 
 # -------- Tools part -------- #
