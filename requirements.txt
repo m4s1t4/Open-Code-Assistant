@@ -1,0 +1,11 @@
+os
+io
+json
+python-dotenv
+base64
+difflib
+pyperclip
+openai
+tavily
+Pillow
+rich
