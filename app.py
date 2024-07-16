@@ -8,8 +8,8 @@ import pyperclip
 from openai import OpenAI
 from tools.tools import tools
 from tavily import TavilyClient
-from prompts.prompts import base_system_prompt, automode_system_prompt
-from PIL import Image
+from prompts.prompts import base_system_prompt
+from PIL import ImageGrab, Image
 from rich.console import Console
 from rich.syntax import Syntax
 from rich.panel import Panel
@@ -24,22 +24,21 @@ console = Console()
 client = OpenAI()
 tavily = TavilyClient(api_key=TAVILY_API_KEY)
 
-# Set up conversation memory.
 conversation_history = []
 
 # -------- Prompts part -------- #
 
 base_sys_prompt = base_system_prompt
-automode_prompt = automode_system_prompt
 
 
-def update_system_prompt(current_iteration=None, max_iterations=None):
-    global base_system_prompt, automode_system_prompt
+def update_system_prompt():
+    global base_system_prompt
     chain_of_thought_prompt = """
     Answer the user's request using relevant tools (if they are available). Before calling a tool, do some analysis within <thinking></thinking> tags. First, think about which of the provided tools is the relevant tool to answer the user's request. Second, go through each of the required parameters of the relevant tool and determine if the user has directly provided or given enough information to infer a value. When deciding if the parameter can be inferred, carefully consider all the context to see if it supports a specific value. If all of the required parameters are present or can be reasonably inferred, close the thinking tag and proceed with the tool call. BUT, if one of the values for a required parameter is missing, DO NOT invoke the function (not even with fillers for the missing params) and instead, ask the user to provide the missing parameters. DO NOT ask for more information on optional parameters if it is not provided.
 
     Do not reflect on the quality of the returned search results in your response.
     """
+
     return base_system_prompt + "\n\n" + chain_of_thought_prompt
 
 
@@ -56,14 +55,11 @@ def create_folder(path):
 
 def create_file(path, content=""):
     try:
-        with open(path, "w", encoding="utf-8") as f:
+        with open(path, "w") as f:
             f.write(content)
-        print(f"File created successfully: {path}")
-        return f"File created successfully: {path}"
+        return f"File created: {path}"
     except Exception as e:
-        error_message = f"Error creating file: {str(e)}"
-        print(error_message)
-        return error_message
+        return f"Error creating file: {str(e)}"
 
 
 def read_file(path):
@@ -152,6 +148,16 @@ def tavily_search(query):
         return f"Error performing search: {str(e)}"
 
 
+def take_screenshot(path):
+    try:
+        screenshot = ImageGrab.grab()
+        rgb_screenshot = screenshot.convert("RGB")
+        rgb_screenshot.save(path, quality=15)
+        return f"Screenshot saved at {path}"
+    except Exception as e:
+        return f"Error taking screenshot: {str(e)}"
+
+
 def get_clipboard_text():
     cliboard_content = pyperclip.paste()
     if isinstance(cliboard_content, str):
@@ -180,6 +186,7 @@ def chat_with_gpt4(user_input, tools, image_path=None):
     global conversation_history
 
     current_conversation = []
+
     if image_path:
         console.print(
             Panel(
@@ -221,7 +228,6 @@ def chat_with_gpt4(user_input, tools, image_path=None):
         messages=messages,
         tools=tools,
         tool_choice="auto",
-        max_tokens=300,
     )
     response_message = response.choices[0].message
     tool_calls = response_message.tool_calls
@@ -234,9 +240,9 @@ def chat_with_gpt4(user_input, tools, image_path=None):
             "list_files": list_files,
             "read_file": read_file,
             "tavily_search": tavily_search,
+            "take_screenshot": take_screenshot,
             "get_clipboard_text": get_clipboard_text,
         }
-
         for tool_call in tool_calls:
             function_name = tool_call.function.name
             function_to_call = available_functions[function_name]
@@ -289,7 +295,7 @@ def chat_with_gpt4(user_input, tools, image_path=None):
 def main():
     console.print(
         Panel(
-            "Welcome to the OpenAI Engineer Chat with Image Support!",
+            "Welcome to the Open Code Assistant!",
             title="Welcome",
             style="bold green",
         )
@@ -318,10 +324,9 @@ def main():
 
             if os.path.isfile(image_path):
                 user_input = console.input(
-                    "[bold cyan]You (prompt for image):[/bold cyan] "
+                    "[bold cyan]User (prompt for image):[/bold cyan] "
                 )
                 chat_with_gpt4(user_input, tools, image_path)
-
             else:
                 console.print(
                     Panel(
@@ -330,6 +335,13 @@ def main():
                         style="bold red",
                     )
                 )
+        elif user_input.lower() == "take screenshot":
+            path = ".\\img\\screenshot.png"
+            screen_shot = take_screenshot(path)
+            console.print(
+                Panel(Markdown(screen_shot), title="Assistant", title_align="left")
+            )
+
         else:
             chat_with_gpt4(user_input, tools)
 
