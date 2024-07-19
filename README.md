@@ -1,60 +1,59 @@
 # Open Code Assistant
 
-Este proyecto es un asistente de código abierto que utiliza varias herramientas y APIs para ayudar en el desarrollo de software. El asistente puede realizar tareas como crear y editar archivos, leer contenido de archivos, listar archivos en un directorio, realizar búsquedas web, tomar capturas de pantalla, y más.
+This project is an open source wizard that uses various tools and APIs to assist in software development. The wizard can perform tasks such as creating and editing files, reading file contents, listing files in a directory, performing web searches, taking screenshots, and more.
 
-## Descripción del Proyecto
+## Project description
 
-El asistente está diseñado para interactuar con el usuario a través de la consola, permitiendo ejecutar comandos y recibir respuestas en tiempo real. Utiliza la API de OpenAI para generar respuestas y la API de Tavily para realizar búsquedas avanzadas en internet. Además, puede procesar imágenes y manejar contenido del portapapeles.
+The wizard is designed to interact with the user through the console, allowing them to execute commands and receive responses in real time. It uses the OpenAI API to generate responses and the Tavily API to perform advanced internet searches. Additionally, it can process images and handle clipboard content.
 
-## Instalación
+## Instalation
 
-1. Clona el repositorio:
+1. Clone this repositori:
     ```sh
-    git clone <URL_DEL_REPOSITORIO>
-    cd <NOMBRE_DEL_REPOSITORIO>
+    git clone https://github.com/JoseMRodriguezM/Open-Code-Assistant.git
+    cd Open-Code-Assistant
     ```
 
-2. Crea un entorno virtual (opcional pero recomendado):
+2. Now create a virtual enviroment:
     ```sh
     python -m venv venv
-    source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
+    source venv/bin/activate  #On windows`venv\Scripts\activate`
     ```
 
-3. Instala las dependencias:
+3. Install the dependecies:
     ```sh
     pip install -r requirements.txt
     ```
 
-4. Crea un archivo `.env` en la raíz del proyecto y agrega tus claves API:
+4. Create a `.env` file in the project root and add your API keys:
     ```env
-    OPENAI_API_KEY=tu_clave_api_de_openai
-    TAVILY_API_KEY=tu_clave_api_de_tavily
+    OPENAI_API_KEY=YOUR_API_KEY
+    TAVILY_API_KEY=YOUR_API_KEY
     ```
 
-## Uso
+## Use
 
-Para iniciar el asistente, simplemente ejecuta el archivo `app.py`:
+To start the assistant, simply run the `app.py` file:
 ```sh
 python app.py
 ```
 
-### Comandos Disponibles
+### Available Commands
 
-- **Texto**: Ingresa cualquier texto para interactuar con el asistente.
-- **`exit`**: Salir del asistente.
-- **`image`**: Procesar una imagen. Se te pedirá que arrastres y sueltes la imagen en la consola.
-- **`take screenshot`**: Tomar una captura de pantalla y guardarla en el directorio `img`.
+- **`exit`**: Exit the assistant.
+- **`image`**: Process an image. You will be prompted to drag and drop the image into the console.
+- **`take screenshot`**: Take a screenshot and save it in the `img` directory.
 
-### Ejemplo de Uso
+### Example of Use
 
-1. Inicia el asistente:
-    ```sh
-    python app.py
-    ```
+1. Start the assistant:
+ ```sh
+ python app.py
+ ```
 
-2. Ingresa un comando:
-    ```sh
-    User: create a new file
-    ```
+2. Enter a command:
+ ```sh
+ User: create a new file called snake.py and store the snake game code made in python
+ ```
 
-3. Sigue las instrucciones del asistente para completar la tarea.
+3. Follow the assistant's instructions to complete the task.
