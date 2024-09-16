@@ -2,6 +2,14 @@
 
 This project is an open source wizard that uses various tools and APIs to assist in software development. The wizard can perform tasks such as creating and editing files, reading file contents, listing files in a directory, performing web searches, taking screenshots, and more.
 
+## Images
+
+![image](https://github.com/user-attachments/assets/60f7b7e7-261e-47ea-a7c3-484c31c96aff)
+
+![image](https://github.com/user-attachments/assets/37cfdce3-4656-4d5d-8507-9cf445eb4bd9)
+
+
+
 ## Project description
 
 The wizard is designed to interact with the user through the console, allowing them to execute commands and receive responses in real time. It uses the OpenAI API to generate responses and the Tavily API to perform advanced internet searches. Additionally, it can process images and handle clipboard content.
